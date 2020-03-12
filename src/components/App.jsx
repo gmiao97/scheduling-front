@@ -6,7 +6,7 @@ import dayGridPlugin from '@fullcalendar/daygrid';
 
 import Login from './login';
 import Signup from './signup';
-import MyProfile from './myprofile';
+import MyProfile from './profile';
 import '../main.scss'; // webpack must be configured to do this
 
 

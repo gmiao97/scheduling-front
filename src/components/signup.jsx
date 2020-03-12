@@ -134,7 +134,7 @@ function GeneralSignup(props) {
       <label>
         Time Zone
         <select name='time_zone' value={props.profile.time_zone} onChange={props.handleChange}>
-          {moment.tz.names().map((value, index) => 
+          {moment.tz.names().map((value, index) =>  // TODO there are timezones that aren't support by packed pytz
             <option key={index} value={value}>{value}</option>
           )}
         </select>

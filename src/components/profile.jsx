@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import axiosInstance from '../axiosApi'
 
-class MyProfile extends Component {
+class Profile extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -13,7 +13,7 @@ class MyProfile extends Component {
   async getProfile() {
     try {
       const userId = getUserIdFromToken();
-      let response = await axiosInstance.get(`/yoyaku/users/${userId}`)
+      let response = await axiosInstance.get(`/yoyaku/users/${userId}/`)
       const message = response.data;
 
       this.setState({
@@ -47,4 +47,4 @@ function getUserIdFromToken() {
   return userId;
 }
 
-export default MyProfile;
+export default Profile;

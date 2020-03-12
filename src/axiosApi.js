@@ -1,4 +1,7 @@
 import axios from 'axios';
+import { createBrowserHistory } from 'history';
+
+export const history = createBrowserHistory({forceRefresh: true});
 
 const axiosInstance = axios.create({
   baseURL: 'http://127.0.0.1:8000/',
@@ -13,14 +16,19 @@ const axiosInstance = axios.create({
 axiosInstance.interceptors.response.use(
   response => response,
   async error => {
-    debugger;
     const originalRequest = error.config;
 
-    if (error.response.status === 401 && error.response.statusText === 'Unauthorized' && !originalRequest._retry) {
+    // if refresh token is invalid/expired, backend will return a 403
+    if (error.response.status == 403) {
+      history.push('/login/');
+      return Promise.reject(error);
+    }
+
+    if (error.response.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true;
       const refresh_token = localStorage.getItem('refresh_token');
       try {
-        // TODO define what happens when refresh token is invalid/expired
+        
         const response = await axiosInstance.post('/api/auth/token/refresh/', { refresh: refresh_token });
         localStorage.setItem('access_token', response.data.access);
         localStorage.setItem('refresh_token', response.data.refresh);
@@ -35,7 +43,7 @@ axiosInstance.interceptors.response.use(
     } else {
       console.log(error);
       // case 1: reject orignal promise on error other than 401
-      // case 2: reject refresh auth request, which is then caught by the caller (the nested axios request)
+      // case 2: reject refresh auth request on invalid login, which is then caught by the caller (the nested axios request)
       return Promise.reject(error);
     }
   }
