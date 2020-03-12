@@ -52,6 +52,7 @@ class Signup extends Component {
     });
   }
 
+  // TODO error handling and validation
   async handleSubmit(event) {
     event.preventDefault();
     switch(this.state.user_type) {
