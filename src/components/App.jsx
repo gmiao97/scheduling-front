@@ -78,7 +78,7 @@ export default class App extends React.Component {
   render() {
     return (
       // <FullCalendar defaultView='dayGridMonth' plugins={[dayGridPlugin]} />
-      <div id='background'>
+      <div>
         {this.state.isAuthenticated ? 
           <Home state={this.state} handleLogout={this.handleLogout}/> : 
           <Landing handleLogin={this.handleLogin}/>
@@ -156,7 +156,7 @@ function Home(props) {
         </Route>)
         <Route exact path={'/calendar/'}>
           {props.state.isAuthenticated ?
-            <FullCalendar id='data' defaultView='dayGridMonth' plugins={[dayGridPlugin]} />: <Redirect to='/login/'/>
+            <FullCalendar defaultView='dayGridMonth' plugins={[dayGridPlugin]} />: <Redirect to='/login/'/>
           }
         </Route>)
       </Switch>
