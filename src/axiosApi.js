@@ -11,6 +11,19 @@ const axiosInstance = axios.create({
   }
 });
 
+axiosInstance.interceptors.request.use(
+  config => {
+    // remove Authorization header on request to create new user
+    if (config.url == '/yoyaku/users/' && config.method == 'post') {
+      delete config.headers['Authorization'];
+    }
+    return config;
+  },
+  error => {
+    return Promise.reject(error);
+  }
+);
+
 axiosInstance.interceptors.response.use(
   response => response,
   async error => {
@@ -23,6 +36,7 @@ axiosInstance.interceptors.response.use(
     } 
 
     if (error.response.status === 401 && !originalRequest._retry) {
+      // set _retry to prevent inifinte loop caused by invalid login with valid refresh token saved
       originalRequest._retry = true;
       const refresh_token = localStorage.getItem('refresh_token');
       try { 
@@ -38,10 +52,10 @@ axiosInstance.interceptors.response.use(
         return Promise.reject(err);
       }
     }
-    
+
     console.log(error);
-    // case 1: reject orignal promise on error other than 401
-    // case 2: reject refresh auth request on invalid login, which is then caught by the caller (the nested axios request)
+    // case 1: reject orignal promise on error other than 401 Unauthorized and 403 Forbidden
+    // case 2: reject refresh auth request, which is then caught by the caller (the nested axios request)
     return Promise.reject(error);
     
   }

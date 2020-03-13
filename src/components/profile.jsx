@@ -32,7 +32,7 @@ class Profile extends Component {
 
   render() {
     return(
-      <div>
+      <div id='data'>
         <p>{this.state.profile}</p>
       </div>
     );

@@ -1,6 +1,17 @@
 import React, { Component } from 'react';
 import moment from 'moment-timezone';
+import {
+  Container,
+  Button, 
+  Form, 
+  FormGroup, 
+  Label, 
+  Input, 
+  FormText,
+} from 'reactstrap';
+
 import axiosInstance from '../axiosApi';
+import {history} from './App';
 
 
 class Signup extends Component {
@@ -67,6 +78,7 @@ class Signup extends Component {
 
     try {
       const response = await axiosInstance.post('/yoyaku/users/', this.state);
+      history.push('/login/');
       return response;
     } catch(error) {
       console.log(error.stack);
@@ -104,7 +116,7 @@ class Signup extends Component {
 function GeneralSignup(props) {
   return(
     <div>
-      <h2>Signup</h2>
+      <h4>Signup</h4>
       <label>
         Email
         <input name='email' type='text' value={props.profile.email} onChange={props.handleChange}/>
