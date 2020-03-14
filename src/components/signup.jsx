@@ -2,17 +2,18 @@ import React, { Component } from 'react';
 import moment from 'moment-timezone';
 import {
   Container,
-  Button, 
-  Form, 
+  Button,  
   FormGroup, 
   Label, 
   Input, 
   Col,
   Row,
 } from 'reactstrap';
+import { AvForm, AvField } from 'availity-reactstrap-validation';
 
+import Login from './login';
 import axiosInstance from '../axiosApi';
-import {history} from './App';
+import { history } from './App';
 
 
 class Signup extends Component {
@@ -32,7 +33,6 @@ class Signup extends Component {
       teacher_profile: {
         association: '',
       },
-      passwords_match: true,
     }
 
     this.handleChange = this.handleChange.bind(this);
@@ -81,7 +81,7 @@ class Signup extends Component {
 
     try {
       const response = await axiosInstance.post('/yoyaku/users/', this.state);
-      history.push('/login/');
+      // history.push('/login/');
       return response;
     } catch(error) {
       console.log(error.stack);
@@ -91,7 +91,7 @@ class Signup extends Component {
   render() {
     return (
       <Container>
-        <Form onSubmit={this.handleSubmit}>
+        <AvForm onValidSubmit={this.handleSubmit}>
           <GeneralSignup 
             profile={this.state}
             handleChange={this.handleChange}
@@ -109,7 +109,7 @@ class Signup extends Component {
             />
           }
           <Button outline color='primary'>Submit</Button>
-        </Form>
+        </AvForm>
       </Container>
     )
   }
@@ -119,34 +119,28 @@ class Signup extends Component {
 function GeneralSignup(props) {
   return(
     <div>
-      <FormGroup>
-        <Label>
-          Email
-          <Input type='email' name='email' value={props.profile.email} onChange={props.handleChange}/>
-        </Label>
-      </FormGroup>
-      <FormGroup>
-        <Label>
-          Password
-          <Input type='password' name='password' value={props.profile.password} onChange={props.handleChange}/>
-        </Label>
-      </FormGroup>
+      <AvField type='email' label='Email' name='email' value={props.profile.email} onChange={props.handleChange} validate={{
+        required: {value: true, errorMessage: 'Please enter an email'},
+        email: {value: true, errorMessage: 'Please enter a valid email address (e.g. example@website.com)'},
+      }}/>
+      <AvField type='password' label='Password' name='password' value={props.profile.password} onChange={props.handleChange} validate={{
+        required: {value: true, errorMessage: 'Please enter a password'},
+        minLength: {value: 8, errorMessage: 'Password must have at least 8 characters'},
+      }}/>
+      <AvField type='password' label='Confirm Password' name='confirm_password' validate={{
+        required: {value: true, errorMessage: 'Please retype password'},
+        match:{value:'password', errorMessage: 'Passwords do not match'},
+      }}/>
       <Row form>
         <Col md='6'>
-          <FormGroup>
-            <Label>
-              First Name
-              <Input type='text' name='first_name' value={props.profile.first_name} onChange={props.handleChange}/>
-            </Label>
-          </FormGroup>
+          <AvField type='text' label='First Name' name='first_name' value={props.profile.first_name} onChange={props.handleChange} validate={{
+            required: {value: true, errorMessage: 'Please enter first name'},
+          }}/>
         </Col>
         <Col md='6'>
-          <FormGroup>
-            <Label>
-              Last Name
-              <Input type='text' name='last_name' value={props.profile.last_name} onChange={props.handleChange}/>
-            </Label>
-          </FormGroup>
+          <AvField type='text' label='Last Name' name='last_name' value={props.profile.last_name} onChange={props.handleChange} validate={{
+            required: {value: true, errorMessage: 'Please enter last name'},
+          }}/>
         </Col>
       </Row>
       <FormGroup tag='fieldset'>
@@ -184,12 +178,9 @@ function StudentProfileSignup(props) {
   'Fifth Grade', 'Sixth Grade', 'Seventh Grade', 'Eighth Grade', 'Ninth Grade', 'Tenth Grade', 'Eleventh Grade', 'Twelvth Grade',]
   return(
     <div>
-      <FormGroup>
-        <Label>
-          School Name
-          <Input type='text' name='school_name' value={props.student_profile.school_name} onChange={props.onChange}/>
-        </Label>
-      </FormGroup>
+      <AvField type='text' label='School Name' name='school_name' value={props.student_profile.school_name} onChange={props.onChange} validate={{
+        required: {value: true, errorMessage: 'Please enter a school name'}
+      }}/>
       <FormGroup>
         <Label>
           School Grade
@@ -208,12 +199,9 @@ function StudentProfileSignup(props) {
 function TeacherProfileSignup(props) {
   return(
     <div>
-      <FormGroup>
-        <Label>
-          Association
-          <Input type='text' name='association' value={props.teacher_profile.association} onChange={props.onChange}></Input>
-        </Label>
-      </FormGroup>
+      <AvField type='text' label='Association' name='association' value={props.teacher_profile.association} onChange={props.onChange} validate={{
+        required: {value: true, errorMessage: 'Please enter an association'}
+      }}/>
     </div>
   );
 }
