@@ -7,6 +7,8 @@ import {
   FormGroup, 
   Label, 
   Input, 
+  Col,
+  Row,
 } from 'reactstrap';
 
 import axiosInstance from '../axiosApi';
@@ -30,12 +32,13 @@ class Signup extends Component {
       teacher_profile: {
         association: '',
       },
+      passwords_match: true,
     }
 
     this.handleChange = this.handleChange.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
     this.handleChangeStudentProfile = this.handleChangeStudentProfile.bind(this);
     this.handleChangeTeacherProfile = this.handleChangeTeacherProfile.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
   }
 
   handleChange(event) {
@@ -128,18 +131,24 @@ function GeneralSignup(props) {
           <Input type='password' name='password' value={props.profile.password} onChange={props.handleChange}/>
         </Label>
       </FormGroup>
-      <FormGroup>
-        <Label>
-          First Name
-          <Input type='text' name='first_name' value={props.profile.first_name} onChange={props.handleChange}/>
-        </Label>
-      </FormGroup>
-      <FormGroup>
-        <Label>
-          Last Name
-          <Input type='text' name='last_name' value={props.profile.last_name} onChange={props.handleChange}/>
-        </Label>
-      </FormGroup>
+      <Row form>
+        <Col md='6'>
+          <FormGroup>
+            <Label>
+              First Name
+              <Input type='text' name='first_name' value={props.profile.first_name} onChange={props.handleChange}/>
+            </Label>
+          </FormGroup>
+        </Col>
+        <Col md='6'>
+          <FormGroup>
+            <Label>
+              Last Name
+              <Input type='text' name='last_name' value={props.profile.last_name} onChange={props.handleChange}/>
+            </Label>
+          </FormGroup>
+        </Col>
+      </Row>
       <FormGroup tag='fieldset'>
         <legend>User Type</legend>
         <FormGroup check>
