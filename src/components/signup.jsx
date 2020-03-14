@@ -7,7 +7,6 @@ import {
   FormGroup, 
   Label, 
   Input, 
-  FormText,
 } from 'reactstrap';
 
 import axiosInstance from '../axiosApi';
@@ -22,8 +21,8 @@ class Signup extends Component {
       password: '',
       first_name: '',
       last_name: '',
-      user_type: '',
-      time_zone: '',
+      user_type: 'STUDENT',
+      time_zone: 'Africa/Abidjan',
       student_profile: {
         school_name: '',
         school_grade: '-1',
@@ -64,6 +63,7 @@ class Signup extends Component {
   }
 
   // TODO error handling and validation
+  // TODO field validation
   async handleSubmit(event) {
     event.preventDefault();
     switch(this.state.user_type) {
@@ -87,8 +87,8 @@ class Signup extends Component {
 
   render() {
     return (
-      <div>
-        <form onSubmit={this.handleSubmit}>
+      <Container>
+        <Form onSubmit={this.handleSubmit}>
           <GeneralSignup 
             profile={this.state}
             handleChange={this.handleChange}
@@ -105,9 +105,9 @@ class Signup extends Component {
               onChange={this.handleChangeTeacherProfile}
             />
           }
-          <input type='submit' value='Submit'/>
-        </form>
-      </div>
+          <Button outline color='primary'>Submit</Button>
+        </Form>
+      </Container>
     )
   }
 }
@@ -116,42 +116,55 @@ class Signup extends Component {
 function GeneralSignup(props) {
   return(
     <div>
-      <h4>Signup</h4>
-      <label>
-        Email
-        <input name='email' type='text' value={props.profile.email} onChange={props.handleChange}/>
-      </label>
-      <label>
-        Password
-        <input name='password' type='password' value={props.profile.password} onChange={props.handleChange}/>
-      </label>
-      <label>
-        First Name
-        <input name='first_name' type='text' value={props.profile.first_name} onChange={props.handleChange}/>
-      </label>
-      <label>
-        Last Name
-        <input name='last_name' type='text' value={props.profile.last_name} onChange={props.handleChange}/>
-      </label>
-      <div>
-        <p>User Type</p>
-        <label>
-          Teacher
-          <input name='user_type' type='radio' value='TEACHER' onChange={props.handleChange}/>
-        </label>
-        <label>
-          Student
-          <input name='user_type' type='radio' value='STUDENT' onChange={props.handleChange}/>
-        </label>
-      </div>
-      <label>
-        Time Zone
-        <select name='time_zone' value={props.profile.time_zone} onChange={props.handleChange}>
-          {moment.tz.names().map((value, index) =>  // TODO there are timezones that aren't support by packed pytz
-            <option key={index} value={value}>{value}</option>
-          )}
-        </select>
-      </label>
+      <FormGroup>
+        <Label>
+          Email
+          <Input type='email' name='email' value={props.profile.email} onChange={props.handleChange}/>
+        </Label>
+      </FormGroup>
+      <FormGroup>
+        <Label>
+          Password
+          <Input type='password' name='password' value={props.profile.password} onChange={props.handleChange}/>
+        </Label>
+      </FormGroup>
+      <FormGroup>
+        <Label>
+          First Name
+          <Input type='text' name='first_name' value={props.profile.first_name} onChange={props.handleChange}/>
+        </Label>
+      </FormGroup>
+      <FormGroup>
+        <Label>
+          Last Name
+          <Input type='text' name='last_name' value={props.profile.last_name} onChange={props.handleChange}/>
+        </Label>
+      </FormGroup>
+      <FormGroup tag='fieldset'>
+        <legend>User Type</legend>
+        <FormGroup check>
+          <Label check>
+            <Input type='radio' name='user_type' value='TEACHER' onChange={props.handleChange}/>
+            Teacher
+          </Label>
+        </FormGroup>
+        <FormGroup check>
+          <Label check>
+            <Input type='radio' name='user_type' value='STUDENT' defaultChecked onChange={props.handleChange}/>
+            Student
+          </Label>
+        </FormGroup>
+      </FormGroup>
+      <FormGroup>
+        <Label>
+          Select Time Zone
+          <Input type='select' name='time_zone' value={props.profile.time_zone} onChange={props.handleChange}> 
+            {moment.tz.names().map((value, index) =>  // TODO there are timezones that aren't support by packed pytz
+              <option key={index} value={value}>{value}</option>
+            )}
+          </Input>
+        </Label>
+      </FormGroup>
     </div>
   );
 }
@@ -162,19 +175,22 @@ function StudentProfileSignup(props) {
   'Fifth Grade', 'Sixth Grade', 'Seventh Grade', 'Eighth Grade', 'Ninth Grade', 'Tenth Grade', 'Eleventh Grade', 'Twelvth Grade',]
   return(
     <div>
-      Student Profile
-      <label>
-        School Name
-        <input name='school_name' type='text' value={props.student_profile.school_name} onChange={props.onChange}/>
-      </label>
-      <label>
-        School Grade
-        <select name='school_grade' value={props.student_profile.school_grade} onChange={props.onChange}>
-          {schoolGrades.map((value, index) => 
-            <option key={index} value={index-1}>{value}</option>
-          )}
-        </select>
-      </label>
+      <FormGroup>
+        <Label>
+          School Name
+          <Input type='text' name='school_name' value={props.student_profile.school_name} onChange={props.onChange}/>
+        </Label>
+      </FormGroup>
+      <FormGroup>
+        <Label>
+          School Grade
+          <Input type='select' name='school_grade' value={props.student_profile.school_grade} onChange={props.onChange}>
+            {schoolGrades.map((value, index) => 
+              <option key={index} value={index-1}>{value}</option>
+            )}
+          </Input>
+        </Label>
+      </FormGroup>
     </div>
   );
 }
@@ -183,11 +199,12 @@ function StudentProfileSignup(props) {
 function TeacherProfileSignup(props) {
   return(
     <div>
-      Teacher Profile
-      <label>
-        Association
-        <input name='association' type='text' value={props.teacher_profile.association} onChange={props.onChange}/>
-      </label>
+      <FormGroup>
+        <Label>
+          Association
+          <Input type='text' name='association' value={props.teacher_profile.association} onChange={props.onChange}></Input>
+        </Label>
+      </FormGroup>
     </div>
   );
 }

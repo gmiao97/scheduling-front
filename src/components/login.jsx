@@ -7,7 +7,6 @@ import {
   FormGroup, 
   Label, 
   Input, 
-  FormText,
 } from 'reactstrap';
 
 
@@ -58,28 +57,9 @@ class Login extends Component {
               <Input type='password' name='password' placeholder='password' value={this.state.password} onChange={this.handleChange}/>
             </Label>
           </FormGroup>
-          <Button>Submit</Button>
+          <Button outline color='primary'>Submit</Button>
         </Form>
       </Container>
-
-
-
-
-
-      // <div>
-      //   <h4>Login</h4>
-      //       <form onSubmit={this.handleSubmit}>
-      //     <label>
-      //       Email:
-      //       <input name='email' type='text' value={this.state.email} onChange={this.handleChange}/>
-      //     </label>
-      //     <label>
-      //       Password:
-      //       <input name='password' type='password' value={this.state.password} onChange={this.handleChange}/>
-      //     </label>
-      //     <input type='submit' value='Submit'/>
-      //   </form>
-      // </div>
     );
   }
 }

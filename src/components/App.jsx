@@ -1,27 +1,12 @@
-import React, { useState } from 'react';
-import { Switch, Route, Redirect, Link } from 'react-router-dom';
+import React, { Component } from 'react';
 import { createBrowserHistory } from 'history';
-import FullCalendar from '@fullcalendar/react';
-import dayGridPlugin from '@fullcalendar/daygrid';
-import {
-  Collapse,
-  Navbar,
-  NavbarToggler,
-  NavbarBrand,
-  Nav,
-  NavItem,
-  NavLink,
-  Button,
-} from 'reactstrap';
 
-import Login from './login';
-import Signup from './signup';
-import Profile from './profile';
+import Landing from './landing';
+import Home from './home';
 import axiosInstance from '../axiosApi';
 
-export const history = createBrowserHistory({forceRefresh: true});
 
-export default class App extends React.Component {
+class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -89,77 +74,5 @@ export default class App extends React.Component {
   }
 }
 
-function Landing(props) {
-  const [isOpen, setIsOpen] = useState(false);
-  const toggle = () => setIsOpen(!isOpen);
-
-  return(
-    <div>
-      <Navbar color='dark' light expand='md'>
-        <NavbarBrand className='text-muted' href='/'>Yoyaku</NavbarBrand>
-        <NavbarToggler onClick={toggle}/>
-        <Collapse isOpen={isOpen} navbar>
-          <Nav className='ml-auto' navbar>
-            <NavItem>
-              <NavLink className='text-muted' tag={Link} to='/login/'>Login</NavLink>
-            </NavItem>
-            <NavItem>
-              <NavLink className='text-muted' tag={Link} to='/signup/'>Signup</NavLink>
-            </NavItem>
-          </Nav>
-        </Collapse>
-      </Navbar>  
-
-      <Switch>
-        <Route exact path={'/login/'}>
-          <Login handleLogin={props.handleLogin}/>
-        </Route> 
-        <Route exact path={'/signup/'}>
-          <Signup/>
-        </Route>
-      </Switch>
-    </div>
-  );
-}
-
-function Home(props) {
-  const [isOpen, setIsOpen] = useState(false);
-  const toggle = () => setIsOpen(!isOpen);
-
-  return(
-    <div>
-      <Navbar color='dark' light expand='md'>
-        <NavbarBrand className='text-muted' href='/'>Yoyaku</NavbarBrand>
-        <NavbarToggler onClick={toggle}/>
-        <Collapse isOpen={isOpen} navbar>
-          <Nav className='mr-auto' navbar>
-            <NavItem>
-              <NavLink className='text-muted' tag={Link} to='/profile/'>Profile</NavLink>
-            </NavItem>
-            <NavItem>
-              <NavLink className='text-muted' tag={Link} to='/calendar/'>Calendar</NavLink>
-            </NavItem>
-          </Nav>
-          <Nav className='ml-auto' navbar>
-            <NavItem>
-              <Button outline color='danger' onClick={props.handleLogout}>Logout</Button>
-            </NavItem>
-          </Nav>
-        </Collapse>
-      </Navbar>  
-
-      <Switch>
-        <Route exact path={'/profile/'}>
-          {props.state.isAuthenticated ?
-            <Profile/> : <Redirect to='/login/'/>
-          }
-        </Route>)
-        <Route exact path={'/calendar/'}>
-          {props.state.isAuthenticated ?
-            <FullCalendar defaultView='dayGridMonth' plugins={[dayGridPlugin]} />: <Redirect to='/login/'/>
-          }
-        </Route>)
-      </Switch>
-    </div>
-  );
-}
+export default App;
+export const history = createBrowserHistory({forceRefresh: true});
