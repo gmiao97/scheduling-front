@@ -29,7 +29,7 @@ function Landing(props) {
 
   return (
     <div>
-      <Navbar color='dark' light expand='md'>
+      <Navbar color='dark' dark expand='sm'>
         <NavbarBrand className='text-muted' href='/'>Yoyaku</NavbarBrand>
         <NavbarToggler onClick={navToggle} />
         <Collapse isOpen={isOpen} navbar>

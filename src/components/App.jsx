@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import { createBrowserHistory } from 'history';
 
-import Landing from './landing';
-import Home from './home';
+import Landing from './landing/landing';
+import Home from './home/home';
 import axiosInstance from '../axiosApi';
 
 

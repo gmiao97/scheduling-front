@@ -12,8 +12,8 @@ import {
 import { AvForm, AvField } from 'availity-reactstrap-validation';
 
 import Login from './login';
-import axiosInstance from '../axiosApi';
-import { history } from './App';
+import axiosInstance from '../../axiosApi';
+import { history } from '../App';
 
 
 class Signup extends Component {
@@ -33,7 +33,7 @@ class Signup extends Component {
       teacher_profile: {
         association: '',
       },
-    }
+    };
 
     this.handleChange = this.handleChange.bind(this);
     this.handleChangeStudentProfile = this.handleChangeStudentProfile.bind(this);
