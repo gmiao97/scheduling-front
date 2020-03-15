@@ -1,11 +1,21 @@
 import React, { Component } from 'react';
+import {
+  Spinner,
+} from 'reactstrap';
+
 import axiosInstance from '../../axiosApi'
 
 class Profile extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      profile: '',
+      email: '',
+      first_name: '',
+      last_name: '',
+      user_type: '',
+      time_zone: '',
+      student_profile: {},
+      teacher_profile: {},
     };
     this.getProfile = this.getProfile.bind(this);
   }
@@ -15,10 +25,9 @@ class Profile extends Component {
       const userId = getUserIdFromToken();
       let response = await axiosInstance.get(`/yoyaku/users/${userId}/`)
       const message = response.data;
-
-      this.setState({
-        profile: JSON.stringify(message, null, 4),
-      });
+      this.setState(
+        message
+      );
       return message;
     } catch(error) {
       console.log('Error: ', JSON.stringify(error, null, 4));
@@ -33,7 +42,8 @@ class Profile extends Component {
   render() {
     return(
       <div>
-        <p>{this.state.profile}</p>
+        <p>{this.state.student_profile.school_name}</p>
+        <Spinner type="grow" color="success" />
       </div>
     );
   }

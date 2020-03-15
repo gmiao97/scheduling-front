@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { createBrowserHistory } from 'history';
+import { Spinner } from 'reactstrap';
 
 import Landing from './landing/landing';
 import Home from './home/home';
@@ -62,7 +63,6 @@ class App extends Component {
 
   render() {
     return (
-      // <FullCalendar defaultView='dayGridMonth' plugins={[dayGridPlugin]} />
       <div>
         {this.state.isAuthenticated ? 
           <Home state={this.state} handleLogout={this.handleLogout}/> : 

@@ -50,7 +50,7 @@ function Home(props) {
           </Route>
           <Route exact path={'/calendar/'}>
             {props.state.isAuthenticated ?
-              <FullCalendar defaultView='dayGridMonth' plugins={[dayGridPlugin]} />: <Redirect to='/login/'/>
+              <FullCalendar defaultView='dayGridMonth' plugins={[dayGridPlugin]} /> : <Redirect to='/login/'/>
             }
           </Route>
           <Route exact path={'/'}>
