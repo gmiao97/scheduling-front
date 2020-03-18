@@ -1,17 +1,19 @@
 import React, { Component } from 'react';
 import { createBrowserHistory } from 'history';
-import { Spinner } from 'reactstrap';
+import { library } from '@fortawesome/fontawesome-svg-core'
+import { faLanguage, faUser } from '@fortawesome/free-solid-svg-icons'
 
 import Landing from './landing/landing';
 import Home from './home/home';
 import axiosInstance from '../axiosApi';
 
+library.add(faLanguage, faUser);
 
 class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      isAuthenticated: false,
+      isAuthenticated: null,
     };
 
     this.handleLogin = this.handleLogin.bind(this);
@@ -62,14 +64,18 @@ class App extends Component {
   }
 
   render() {
+    let renderComponent;
+    if (this.state.isAuthenticated == null) {
+      renderComponent = null;
+    } else {
+      renderComponent = (this.state.isAuthenticated) ? 
+      <Home state={this.state} handleLogout={this.handleLogout}/> : 
+      <Landing handleLogin={this.handleLogin}/>
+    }
     return (
       <div>
-        {this.state.isAuthenticated ? 
-          <Home state={this.state} handleLogout={this.handleLogout}/> : 
-          <Landing handleLogin={this.handleLogin}/>
-        }
-      </div>
-      
+        {renderComponent}
+      </div>   
     );
   }
 }

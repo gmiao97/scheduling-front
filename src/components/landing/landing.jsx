@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Switch, Route, Link } from 'react-router-dom';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
   Collapse,
   Navbar,
@@ -11,7 +12,6 @@ import {
   Modal, 
   ModalHeader, 
   ModalBody, 
-  ModalFooter,
 } from 'reactstrap';
 
 import Login from './login';
@@ -29,13 +29,16 @@ function Landing(props) {
   return (
     <div>
       <Navbar color='dark' dark expand='sm'>
-        <NavbarBrand className='text-muted' href='/'>Yoyaku</NavbarBrand>
+        <NavbarBrand className='text-info' href='/'>
+          <span className='m-1'><FontAwesomeIcon icon='language' size='lg'/></span>
+          Yoyaku
+        </NavbarBrand>
         <NavbarToggler onClick={navToggle} />
         <Collapse isOpen={isOpen} navbar>
           <Nav className='ml-auto' navbar>
             <NavItem>
               <div>
-                <Button className='m-1' outline color='primary' onClick={modalToggle1}>Signup</Button>
+                <Button className='m-1' outline color='info' onClick={modalToggle1}>Signup</Button>
                 <Modal isOpen={modal1} toggle={modalToggle1}>
                   <ModalHeader toggle={modalToggle1}>Signup</ModalHeader>
                   <ModalBody>
@@ -46,7 +49,7 @@ function Landing(props) {
             </NavItem>
             <NavItem>
               <div>
-                <Button className='m-1' outline color='primary' onClick={modalToggle2}>Login</Button>
+                <Button className='m-1' outline color='info' onClick={modalToggle2}>Login</Button>
                 <Modal isOpen={modal2} toggle={modalToggle2}>
                   <ModalHeader toggle={modalToggle2}>Login</ModalHeader>
                   <ModalBody>

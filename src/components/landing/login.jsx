@@ -57,7 +57,7 @@ class Login extends Component {
               <Input type='password' name='password' placeholder='password' value={this.state.password} onChange={this.handleChange}/>
             </Label>
           </FormGroup>
-          <Button outline color='primary'>Submit</Button>
+          <Button outline color='info'>Submit</Button>
         </Form>
       </Container>
     );
