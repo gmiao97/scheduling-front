@@ -69,7 +69,7 @@ class App extends Component {
       renderComponent = null;
     } else {
       renderComponent = (this.state.isAuthenticated) ? 
-      <Home state={this.state} handleLogout={this.handleLogout}/> : 
+      <Home handleLogout={this.handleLogout}/> : 
       <Landing handleLogin={this.handleLogin}/>
     }
     return (

@@ -4,7 +4,6 @@ import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
-  Container,
   Collapse,
   Navbar,
   NavbarToggler,
@@ -16,7 +15,16 @@ import {
 } from 'reactstrap';
 
 import Profile from './profile';
+import Calendar from './calendar';
 
+
+export function getUserIdFromToken() {
+  const token = localStorage.getItem('access_token');
+  const encodedPayLoad = token.split('.')[1];
+  const payloadObject = JSON.parse(atob(encodedPayLoad));
+  const userId = payloadObject.user_id;
+  return userId;
+}
 
 function Home(props) {
   const [isOpen, setIsOpen] = useState(false);
@@ -49,23 +57,13 @@ function Home(props) {
         </Navbar>  
         <Switch>
           <Route exact path={'/profile/'}>
-            {props.state.isAuthenticated ?
-              <Profile/> : <Redirect to='/login/'/>
-            }
+            <Profile/>
           </Route>
           <Route exact path={'/calendar/'}>
-            {props.state.isAuthenticated ?
-              <Container>
-                <FullCalendar defaultView='dayGridMonth' plugins={[dayGridPlugin]} /> 
-              </Container>
-            : 
-              <Redirect to='/login/'/>
-            }
+            <Calendar/>
           </Route>
           <Route exact path={'/'}>
-            {props.state.isAuthenticated ?
-              <Profile/> : <Redirect to='/login/'/>
-            }
+            <Profile/>
           </Route>
         </Switch>
       </div>

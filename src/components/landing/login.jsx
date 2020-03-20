@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import axiosInstance from '../../axiosApi';
 import {
   Container,
   Button, 
@@ -9,6 +8,7 @@ import {
   Input, 
 } from 'reactstrap';
 
+import axiosInstance from '../../axiosApi';
 
 class Login extends Component {
   constructor(props) {

@@ -1,4 +1,5 @@
 import axios from 'axios';
+
 import { history } from './components/App';
 
 const axiosInstance = axios.create({
@@ -14,7 +15,7 @@ const axiosInstance = axios.create({
 axiosInstance.interceptors.request.use(
   config => {
     // remove Authorization header on request to create new user
-    if (config.url == '/yoyaku/users/' && config.method == 'post') {
+    if (config.url === '/yoyaku/users/' && config.method === 'post') {
       delete config.headers['Authorization'];
     }
     return config;
@@ -30,7 +31,7 @@ axiosInstance.interceptors.response.use(
     const originalRequest = error.config;
 
     // if refresh token is invalid/expired, backend will return a 403
-    if (error.response.status == 403) {
+    if (error.response.status === 403) {
       history.push('/login/');
       return Promise.reject(error);
     } 
