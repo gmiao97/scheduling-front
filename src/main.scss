@@ -4,6 +4,11 @@
 @import '~@fortawesome/fontawesome-free/css/all.css';
 @import '~@fullcalendar/timegrid/main.css';
 
+
+.fc-today {
+  background: #fdfdea;
+}
+
 // html, body, #root, div {
 //   height: 100%;
 // }

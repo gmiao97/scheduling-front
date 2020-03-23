@@ -9,6 +9,7 @@ import {
 } from 'reactstrap';
 
 import { getUserIdFromToken } from './home';
+import axiosInstance from '../../axiosApi';
 
 class Calendar extends Component {
   constructor(props) {
@@ -16,6 +17,7 @@ class Calendar extends Component {
 
     this.handleDateClick = this.handleDateClick.bind(this);
     this.handleEventClick = this.handleEventClick.bind(this);
+    this.handleSelect = this.handleSelect.bind(this);
   }
 
   handleDateClick(info) {
@@ -24,30 +26,50 @@ class Calendar extends Component {
 
   handleEventClick(info) {
     alert(info.event.title);
+    alert(info.event.id);
+  }
+
+  handleSelect(info) {
+    
   }
 
   render() {
     return(
-      <Container>
-        <FullCalendar 
-          plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin, bootstrapPlugin]} 
-          defaultView='dayGridMonth'
-          themeSystem='bootstrap'
-          slotDuration='00:30:00'
-          selectable='true'
-          dateClick={this.handleDateClick}
-          eventClick={this.handleEventClick}
-          header={{
-            left: 'prev,next, today',
-            center: 'title',
-            right: 'timeGridWeek,dayGridMonth',
-          }}
-          events={{
-            url: `http://127.0.0.1:8000/yoyaku/users/${getUserIdFromToken()}/events/`,
-            method: 'GET',
-          }}
-        /> 
-      </Container>
+      <div className='m-3'>
+        <Container>
+          <FullCalendar
+            plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin, bootstrapPlugin]} 
+            defaultView='dayGridMonth'
+            themeSystem='bootstrap'
+            slotDuration='00:15:00'
+            selectable='true'
+            dateClick={this.handleDateClick}
+            eventClick={this.handleEventClick}
+            select={this.handleSelect}
+            header={{
+              left: 'prev,next, today',
+              center: 'title',
+              right: 'timeGridDay,timeGridWeek,dayGridMonth',
+            }}
+            events={
+              (info, successCallback, failureCallback) => {
+                axiosInstance.get(`/yoyaku/users/${getUserIdFromToken()}/events/`, {
+                  params: {
+                    start: info.startStr,
+                    end: info.endStr,
+                  }
+                })
+                .then(result => {
+                  successCallback(result.data);
+                })
+                .catch(err => {
+                  failureCallback(err);
+                });
+              }
+            }
+          /> 
+        </Container>
+      </div>
     );
   }
 }

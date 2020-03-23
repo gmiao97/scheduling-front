@@ -27,7 +27,7 @@ class App extends Component {
   async isAuthenticated() {
     const access_token = localStorage.getItem('access_token');
     try {
-      const response = await axiosInstance.get('/yoyaku/validate-token/', { access: access_token });
+      await axiosInstance.get('/yoyaku/validate-token/', { access: access_token });
       this.setState({
         isAuthenticated: true,
       });
