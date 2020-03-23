@@ -2,6 +2,7 @@ import axios from 'axios';
 
 import { history } from './components/App';
 
+// TODO store tokens in HTTP only cookie
 const axiosInstance = axios.create({
   baseURL: 'http://127.0.0.1:8000/',
   timeout: 5000,
