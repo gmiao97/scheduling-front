@@ -11,9 +11,7 @@ import {
 } from 'reactstrap';
 import { AvForm, AvField } from 'availity-reactstrap-validation';
 
-import Login from './login';
 import axiosInstance from '../../axiosApi';
-import { history } from '../App';
 
 
 class Signup extends Component {
@@ -162,7 +160,7 @@ function GeneralSignup(props) {
         <Label>
           Select Time Zone
           <Input type='select' name='time_zone' value={props.profile.time_zone} onChange={props.handleChange}> 
-            {moment.tz.names().map((value, index) =>  // TODO there are timezones that aren't support by packed pytz
+            {moment.tz.names().map((value, index) =>  // TODO there are timezones that aren't support by pytz
               <option key={index} value={value}>{value}</option>
             )}
           </Input>

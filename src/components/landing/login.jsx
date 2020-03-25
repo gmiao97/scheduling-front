@@ -48,13 +48,13 @@ class Login extends Component {
           <FormGroup>
             <Label>
               Email
-              <Input type='email' name='email' placeholder='email@address.com' value={this.state.email} onChange={this.handleChange}/>
+              <Input type='email' name='email' value={this.state.email} onChange={this.handleChange}/>
             </Label>
           </FormGroup>
           <FormGroup>
             <Label>
               Password
-              <Input type='password' name='password' placeholder='password' value={this.state.password} onChange={this.handleChange}/>
+              <Input type='password' name='password' value={this.state.password} onChange={this.handleChange}/>
             </Label>
           </FormGroup>
           <Button outline color='info'>Submit</Button>

@@ -1,7 +1,5 @@
 import React, { useState } from 'react';
 import { Switch, Route, Redirect, Link } from 'react-router-dom';
-import FullCalendar from '@fullcalendar/react';
-import dayGridPlugin from '@fullcalendar/daygrid';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
   Collapse,

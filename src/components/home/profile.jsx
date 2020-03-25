@@ -45,7 +45,7 @@ class Profile extends Component {
 
   async getProfile() {
     try {
-      let response = await axiosInstance.get(`/yoyaku/users/${getUserIdFromToken()}/`)
+      let response = await axiosInstance.get(`/yoyaku/users/${getUserIdFromToken()}/`);
       const message = response.data;
       this.setState({
         ...message,
@@ -75,7 +75,7 @@ class Profile extends Component {
       this.state.isProfileLoaded ?
         <div>
           <Jumbotron fluid>
-            <Container fluid>
+            <Container className='mx-5' fluid>
               <h1>{this.state.first_name + ' ' + this.state.last_name}</h1>
               <h4>{this.state.user_type.toLowerCase()}</h4>
               <p className='text-muted'>Lorem ipsum dolor sit amet consectetur adipisicing elit. 
