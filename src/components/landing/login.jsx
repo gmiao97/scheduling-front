@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { AvForm, AvField } from 'availity-reactstrap-validation';
 import {
   Container,
   Button, 
@@ -44,21 +45,16 @@ class Login extends Component {
   render() {
     return (
       <Container>
-        <Form onSubmit={this.handleSubmit}>
-          <FormGroup>
-            <Label>
-              Email
-              <Input type='email' name='email' value={this.state.email} onChange={this.handleChange}/>
-            </Label>
-          </FormGroup>
-          <FormGroup>
-            <Label>
-              Password
-              <Input type='password' name='password' value={this.state.password} onChange={this.handleChange}/>
-            </Label>
-          </FormGroup>
+        <AvForm onValidSubmit={this.handleSubmit}>
+          <AvField type='email' label='Email' name='email' value={this.state.email} onChange={this.handleChange} validate={{
+            required: {value: true, errorMessage: 'Please enter an email'},
+            email: {value: true, errorMessage: 'Please enter a valid email address (e.g. example@website.com)'},
+          }}/>
+          <AvField type='password' label='Password' name='password' value={this.state.password} onChange={this.handleChange} validate={{
+            required: {value: true, errorMessage: 'Please enter a password'},
+          }}/>
           <Button outline color='info'>Submit</Button>
-        </Form>
+        </AvForm>
       </Container>
     );
   }

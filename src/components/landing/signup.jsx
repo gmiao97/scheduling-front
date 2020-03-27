@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import moment from 'moment-timezone';
+import { AvForm, AvField } from 'availity-reactstrap-validation';
 import {
   Container,
   Button,  
@@ -9,7 +10,6 @@ import {
   Col,
   Row,
 } from 'reactstrap';
-import { AvForm, AvField } from 'availity-reactstrap-validation';
 
 import axiosInstance from '../../axiosApi';
 

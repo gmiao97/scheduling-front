@@ -3,6 +3,9 @@
 @import '~@fullcalendar/bootstrap/main.css';
 @import '~@fortawesome/fontawesome-free/css/all.css';
 @import '~@fullcalendar/timegrid/main.css';
+$font-path: '~react-widgets/lib/fonts';
+$img-path: '~react-widgets/lib/img';
+@import '~react-widgets/dist/css/react-widgets.css';
 
 
 .fc-today {

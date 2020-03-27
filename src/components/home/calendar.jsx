@@ -4,6 +4,9 @@ import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import interactionPlugin from "@fullcalendar/interaction";
 import bootstrapPlugin from '@fullcalendar/bootstrap';
+import { DateTimePicker } from 'react-widgets';
+import moment from 'moment-timezone';
+import { AvForm, AvField } from 'availity-reactstrap-validation';
 import {
   Container,
   Modal, 
@@ -40,12 +43,16 @@ class Calendar extends Component {
     this.handleSelect = this.handleSelect.bind(this);
     this.handleChange = this.handleChange.bind(this);
     this.handleMultiSelectChange = this.handleMultiSelectChange.bind(this);
+    this.handleTimeChange = this.handleTimeChange.bind(this);
     this.handleNewEventSubmit = this.handleNewEventSubmit.bind(this);
     this.toggleForm = this.toggleForm.bind(this);
   }
 
   componentDidMount() {
     this.getStudentList();
+    this.setState({
+      teacher_user: getUserIdFromToken(),
+    });
   }
 
   async getStudentList() {
@@ -65,9 +72,8 @@ class Calendar extends Component {
   }
 
   handleDateClick(info) {
-    // alert(info.dateStr);
     this.setState({
-      selectedDate: info.dateStr,
+      selectedDate: moment.tz(info.dateStr, moment.tz.guess()).format(),
     });
     this.toggleForm('new');
   }
@@ -99,6 +105,12 @@ class Calendar extends Component {
     }
     this.setState({
       [event.target.name]: selectedValues,
+    });
+  }
+
+  handleTimeChange(name, value) {
+    this.setState({
+      [name]: value,
     });
   }
 
@@ -155,7 +167,13 @@ class Calendar extends Component {
           />
           {getUserTypeFromToken() === 'TEACHER' ? 
             <div>
-              <NewEventForm state={this.state} toggle={this.toggleForm} onChange={this.handleChange} onMultiSelectChange={this.handleMultiSelectChange} onSubmit={this.handleNewEventSubmit}/>
+              <NewEventForm 
+                state={this.state} 
+                toggle={this.toggleForm} 
+                onChange={this.handleChange} 
+                onMultiSelectChange={this.handleMultiSelectChange} 
+                onTimeChange={this.handleTimeChange}
+                onSubmit={this.handleNewEventSubmit}/>
               <EditEventForm state={this.state} toggle={this.toggleForm} onChange={this.handleChange}/>
             </div> 
           :
@@ -173,7 +191,7 @@ function NewEventForm(props) {
       <ModalHeader toggle={() => props.toggle('new')}>Create New Event on {props.state.selectedDate}</ModalHeader>
       <ModalBody>
         <Container>
-          <Form onSubmit={props.handleSubmit}>
+          <AvForm onValidSubmit={props.handleSubmit}>
             <FormGroup>
               <Label>
                 Event Name
@@ -190,7 +208,22 @@ function NewEventForm(props) {
                 </Input>
               </Label>
             </FormGroup>
-          </Form>
+            <FormGroup> {/* TODO validations that start < end */}
+              Start
+              <DateTimePicker 
+                onChange={value => props.onTimeChange('start', value.toISOString())}
+                date={false}
+                currentDate={new Date(props.state.selectedDate)}
+              />
+              End
+              <DateTimePicker 
+                onChange={value => props.onTimeChange('end', value.toISOString())}
+                date={false}
+                currentDate={new Date(props.state.selectedDate)}
+              />
+            </FormGroup>
+            <Button outline color='info'>Submit</Button>
+          </AvForm>
         </Container>
       </ModalBody>
     </Modal>
