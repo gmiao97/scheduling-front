@@ -4,7 +4,7 @@ import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import interactionPlugin from "@fullcalendar/interaction";
 import bootstrapPlugin from '@fullcalendar/bootstrap';
-import { DateTimePicker } from 'react-widgets';
+import { DateTimePicker, Multiselect } from 'react-widgets';
 import moment from 'moment-timezone';
 import { AvForm, AvField } from 'availity-reactstrap-validation';
 import {
@@ -43,7 +43,7 @@ class Calendar extends Component {
     this.handleSelect = this.handleSelect.bind(this);
     this.handleChange = this.handleChange.bind(this);
     this.handleMultiSelectChange = this.handleMultiSelectChange.bind(this);
-    this.handleTimeChange = this.handleTimeChange.bind(this);
+    this.handleWidgetChange = this.handleWidgetChange.bind(this);
     this.handleNewEventSubmit = this.handleNewEventSubmit.bind(this);
     this.toggleForm = this.toggleForm.bind(this);
   }
@@ -108,7 +108,7 @@ class Calendar extends Component {
     });
   }
 
-  handleTimeChange(name, value) {
+  handleWidgetChange(name, value) {
     this.setState({
       [name]: value,
     });
@@ -172,7 +172,7 @@ class Calendar extends Component {
                 toggle={this.toggleForm} 
                 onChange={this.handleChange} 
                 onMultiSelectChange={this.handleMultiSelectChange} 
-                onTimeChange={this.handleTimeChange}
+                onWidgetChange={this.handleWidgetChange}
                 onSubmit={this.handleNewEventSubmit}/>
               <EditEventForm state={this.state} toggle={this.toggleForm} onChange={this.handleChange}/>
             </div> 
@@ -192,34 +192,30 @@ function NewEventForm(props) {
       <ModalBody>
         <Container>
           <AvForm onValidSubmit={props.handleSubmit}>
-            <FormGroup>
-              <Label>
-                Event Name
-                <Input type='text' name='title' value={props.state.title} onChange={props.onChange}/>
-              </Label>
-            </FormGroup>
-            <FormGroup>
-              <Label>
-                Select Students
-                <Input type='select' name='student_user' multiple onChange={props.onMultiSelectChange}> 
-                  {props.state.studentList.map((value, index) => 
-                    <option key={index} value={value.split(' ')[2].slice(1, -1)}>{value}</option>
-                  )}
-                </Input>
-              </Label>
-            </FormGroup>
+            <AvField type='text' label='Event Name' name='title' value={props.state.title} onChange={props.onChange} validate={{
+              required: {value: true, errorMessage: 'Please enter event name'},
+            }}/>
+            Select Students
+            <Multiselect
+              name='student_user'
+              data={props.state.studentList}
+              onChange={value => props.onWidgetChange('student_user', value.map(student => student.split(' ')[2].slice(1, -1)))}
+            />
             <FormGroup> {/* TODO validations that start < end */}
               Start
-              <DateTimePicker 
-                onChange={value => props.onTimeChange('start', value.toISOString())}
+              <DateTimePicker
+                name='start'
+                onChange={value => props.onWidgetChange('start', value.toISOString())}
                 date={false}
                 currentDate={new Date(props.state.selectedDate)}
+                step={15}
               />
               End
               <DateTimePicker 
-                onChange={value => props.onTimeChange('end', value.toISOString())}
+                onChange={value => props.onWidgetChange('end', value.toISOString())}
                 date={false}
                 currentDate={new Date(props.state.selectedDate)}
+                step={15}
               />
             </FormGroup>
             <Button outline color='info'>Submit</Button>
