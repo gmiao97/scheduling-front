@@ -32,6 +32,7 @@ class Calendar extends Component {
       student_user: [],
       teacher_user: '',
       selectedDate: '',
+      selectedEvent: '',
       studentList: [],
       displayNewEventForm: false,
       displayEditEventForm: false,
@@ -45,11 +46,14 @@ class Calendar extends Component {
     this.handleMultiSelectChange = this.handleMultiSelectChange.bind(this);
     this.handleWidgetChange = this.handleWidgetChange.bind(this);
     this.handleNewEventSubmit = this.handleNewEventSubmit.bind(this);
+    this.handleDelete = this.handleDelete.bind(this);
     this.toggleForm = this.toggleForm.bind(this);
   }
 
   componentDidMount() {
-    this.getStudentList();
+    if (getUserTypeFromToken() === 'TEACHER') {
+      this.getStudentList();
+    }
     this.setState({
       teacher_user: getUserIdFromToken(),
     });
@@ -82,6 +86,9 @@ class Calendar extends Component {
     // alert(info.event.title);
     // alert(info.event.id);
     // alert(info.event.extendedProps.student_user[0].first_name);
+    this.setState({
+      selectedEvent: info.event.id,
+    });
     this.toggleForm('edit');
   }
 
@@ -114,8 +121,27 @@ class Calendar extends Component {
     });
   }
 
-  handleNewEventSubmit(event) {
+  async handleNewEventSubmit(event) {
     event.preventDefault();
+    this.toggleForm('new');
+    try {
+      const response = await axiosInstance.post('/yoyaku/events/', this.state);
+      this.forceUpdate();
+      return response;
+    } catch(error) {
+      console.log(error.stack);
+    }
+  }
+
+  async handleDelete() {
+    this.toggleForm('edit');
+    try {
+      const response = await axiosInstance.delete(`/yoyaku/events/${this.state.selectedEvent}/`);
+      this.forceUpdate();
+      return response;
+    } catch(error) {
+      console.log(error.stack);
+    }
   }
 
   toggleForm(formType) {
@@ -174,7 +200,11 @@ class Calendar extends Component {
                 onMultiSelectChange={this.handleMultiSelectChange} 
                 onWidgetChange={this.handleWidgetChange}
                 onSubmit={this.handleNewEventSubmit}/>
-              <EditEventForm state={this.state} toggle={this.toggleForm} onChange={this.handleChange}/>
+              <EditEventForm 
+                state={this.state} 
+                toggle={this.toggleForm} 
+                onDelete={this.handleDelete}
+              />
             </div> 
           :
             null
@@ -191,7 +221,7 @@ function NewEventForm(props) {
       <ModalHeader toggle={() => props.toggle('new')}>Create New Event on {props.state.selectedDate}</ModalHeader>
       <ModalBody>
         <Container>
-          <AvForm onValidSubmit={props.handleSubmit}>
+          <AvForm onValidSubmit={props.onSubmit}>
             <AvField type='text' label='Event Name' name='title' value={props.state.title} onChange={props.onChange} validate={{
               required: {value: true, errorMessage: 'Please enter event name'},
             }}/>
@@ -231,7 +261,10 @@ function EditEventForm(props) {
     <Modal isOpen={props.state.displayEditEventForm} toggle={() => {props.toggle('edit');}}>
       <ModalHeader toggle={() => props.toggle('edit')}>Edit Event</ModalHeader>
       <ModalBody>
-        Edit Event
+        <Container>
+    
+          <Button outline color='danger' onClick={props.onDelete}>Delete</Button>
+        </Container>
       </ModalBody>
     </Modal>
   );
