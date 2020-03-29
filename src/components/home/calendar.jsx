@@ -38,6 +38,7 @@ class Calendar extends Component {
       displayEditEventForm: false,
     };
 
+    this.calendarRef = React.createRef();
     this.getStudentList = this.getStudentList.bind(this);
     this.handleDateClick = this.handleDateClick.bind(this);
     this.handleEventClick = this.handleEventClick.bind(this);
@@ -75,10 +76,17 @@ class Calendar extends Component {
   }
 
   handleDateClick(info) {
-    this.setState({
-      selectedDate: moment.tz(info.dateStr, moment.tz.guess()).format(),
-    });
-    this.toggleForm('new');
+    const calendarApi = this.calendarRef.current.getApi();
+    if (calendarApi.view.type === 'dayGridMonth') {
+      calendarApi.changeView('timeGridDay', info.dateStr);
+    } else {
+      this.setState({
+        // selectedDate: moment.tz(info.dateStr, moment.tz.guess()).format(),
+        selectedDate: info.dateStr,
+
+      });
+      this.toggleForm('new');
+    }
   }
 
   handleEventClick(info) {
@@ -92,7 +100,11 @@ class Calendar extends Component {
   }
 
   handleSelect(info) {
-    
+    // const calendarApi = this.calendarRef.current.getApi();
+    // calendarApi.changeView('timeGrid', {
+    //   start: info.start,
+    //   end: info.end,
+    // });
   }
 
   handleChange(event) {
@@ -147,11 +159,14 @@ class Calendar extends Component {
       <div className='m-3'>
         <Container>
           <FullCalendar
+            ref={this.calendarRef}
             plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin, bootstrapPlugin]} 
             defaultView='dayGridMonth'
             themeSystem='bootstrap'
             slotDuration='00:15:00'
+            slotEventOverlap={false}
             selectable='true'
+            // selectMinDistance='50'
             dateClick={this.handleDateClick}
             eventClick={this.handleEventClick}
             select={this.handleSelect}
@@ -203,7 +218,7 @@ class Calendar extends Component {
 function NewEventForm(props) {
   return(
     <Modal isOpen={props.state.displayNewEventForm} toggle={() => {props.toggle('new');}}>
-      <ModalHeader toggle={() => props.toggle('new')}>Create New Event on {props.state.selectedDate}</ModalHeader>
+      <ModalHeader toggle={() => props.toggle('new')}>Create New Event on {props.state.selectedDate.slice(0, 10)}</ModalHeader>
       <ModalBody>
         <Container>
           <AvForm onValidSubmit={props.onSubmit}>
@@ -214,19 +229,20 @@ function NewEventForm(props) {
             <Multiselect
               name='student_user'
               data={props.state.studentList}
-              onChange={value => props.onWidgetChange('student_user', value.map(student => student.split(' ')[-1].slice(1, -1)))}
+              onChange={value => props.onWidgetChange('student_user', value.map(student => student.split(' ')[2].slice(1, -1)))}
             />
             <FormGroup> {/* TODO validations that start < end */}
               Start
               <DateTimePicker
-                onChange={value => props.onWidgetChange('start', value.toISOString())}
+                onChange={value => props.onWidgetChange('start', value)}
                 date={false}
                 currentDate={new Date(props.state.selectedDate)}
+                // defaultValue={new Date(props.state.selectedDate)}
                 step={15}
               />
               End
               <DateTimePicker 
-                onChange={value => props.onWidgetChange('end', value.toISOString())}
+                onChange={value => props.onWidgetChange('end', value)}
                 date={false}
                 currentDate={new Date(props.state.selectedDate)}
                 step={15}
