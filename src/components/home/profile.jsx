@@ -29,6 +29,9 @@ class Profile extends Component {
       last_name: '',
       user_type: '',
       time_zone: '',
+      phone_number: '',
+      birthday: '',
+      description: '',
       student_profile: {
         school_name: '',
         school_grade: '',
@@ -78,9 +81,7 @@ class Profile extends Component {
             <Container className='mx-5' fluid>
               <h1>{this.state.first_name + ' ' + this.state.last_name}</h1>
               <h4>{this.state.user_type.toLowerCase()}</h4>
-              <p className='text-muted'>Lorem ipsum dolor sit amet consectetur adipisicing elit. 
-              Officiis nihil accusantium nobis praesentium maiores quos totam est harum unde 
-              voluptatibus minima error ad beatae dolores, quasi quod fugiat laudantium qui?</p>
+              <p className='text-muted'>{this.state.description}</p>
             </Container>
           </Jumbotron>
           <Container>
@@ -107,10 +108,18 @@ class Profile extends Component {
                     <span className='m-1'><FontAwesomeIcon icon='user' size='3x' color='orange'/></span>
                   </Col>
                   <Col sm="11">
-                    <h4>Contact Info</h4>
+                    <h4>Basic Info</h4>
                     <h6>
                       Email
                       <small className='text-muted m-2'>{this.state.email}</small>
+                    </h6>
+                    <h6>
+                      Phone
+                      <small className='text-muted m-2'>{this.state.phone_number}</small>
+                    </h6>
+                    <h6>
+                      Age
+                      <small className='text-muted m-2'>{this.state.birthday}</small>
                     </h6>
                     <h6>
                       Time Zone
