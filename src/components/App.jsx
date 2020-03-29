@@ -36,6 +36,7 @@ class App extends Component {
       this.setState({
         isAuthenticated: false,
       });
+      this.handleLogout()
     }
   }
 
@@ -50,16 +51,17 @@ class App extends Component {
       const response = await axiosInstance.post('/yoyaku/blacklist/', {
         'refresh_token': localStorage.getItem('refresh_token')
       });
-      localStorage.removeItem('access_token');
-      localStorage.removeItem('refresh_token');
-      axiosInstance.defaults.headers['Authorization'] = null;
-      this.setState({
-        isAuthenticated: false,
-      });
       return response;
     }
     catch(e) {
       console.log(e);
+    } finally {
+      this.setState({
+        isAuthenticated: false,
+      });
+      axiosInstance.defaults.headers['Authorization'] = null;
+      localStorage.removeItem('access_token');
+      localStorage.removeItem('refresh_token');
     }
   }
 
@@ -81,4 +83,4 @@ class App extends Component {
 }
 
 export default App;
-export const history = createBrowserHistory({forceRefresh: true});
+// export const history = createBrowserHistory({forceRefresh: true});

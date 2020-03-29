@@ -1,6 +1,5 @@
 import axios from 'axios';
 
-import { history } from './components/App';
 
 // TODO store tokens in HTTP only cookie
 const axiosInstance = axios.create({
@@ -55,7 +54,7 @@ axiosInstance.interceptors.response.use(
     }
 
     console.log(error);
-    // case 1: reject orignal promise on error other than 401 Unauthorized and 403 Forbidden
+    // case 1: reject original promise on error other than 401 Unauthorized and 403 Forbidden
     // case 2: reject refresh auth request, which is then caught by the caller (the nested axios request)
     return Promise.reject(error);
     
