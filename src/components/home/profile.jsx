@@ -18,7 +18,7 @@ import {
 } from 'reactstrap';
 
 import axiosInstance from '../../axiosApi';
-import { getUserIdFromToken } from './home';
+import { getUserIdFromToken } from '../util';
 
 class Profile extends Component {
   constructor(props) {
@@ -47,18 +47,13 @@ class Profile extends Component {
   }
 
   async getProfile() {
-    try {
-      let response = await axiosInstance.get(`/yoyaku/users/${getUserIdFromToken()}/`);
-      const message = response.data;
-      this.setState({
-        ...message,
-        isProfileLoaded: true,
-      });
-      return message;
-    } catch (error) {
-      console.log('Error: ', JSON.stringify(error, null, 4));
-      throw error;
-    }
+    let response = await axiosInstance.get(`/yoyaku/users/${getUserIdFromToken()}/`);
+    const message = response.data;
+    this.setState({
+      ...message,
+      isProfileLoaded: true,
+    });
+    return message;
   }
 
   toggleTab(tab) {
@@ -70,7 +65,11 @@ class Profile extends Component {
   }
 
   componentDidMount() {
-    this.getProfile();
+    try {
+      this.getProfile();
+    } catch (error) {
+      throw error;
+    }
   }
 
   render() {

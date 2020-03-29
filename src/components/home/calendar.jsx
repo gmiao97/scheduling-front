@@ -19,7 +19,7 @@ import {
   Input, 
 } from 'reactstrap';
 
-import { getUserIdFromToken, getUserTypeFromToken } from './home';
+import { getUserIdFromToken, getUserTypeFromToken } from '../util';
 import axiosInstance from '../../axiosApi';
 
 class Calendar extends Component {
@@ -43,7 +43,6 @@ class Calendar extends Component {
     this.handleEventClick = this.handleEventClick.bind(this);
     this.handleSelect = this.handleSelect.bind(this);
     this.handleChange = this.handleChange.bind(this);
-    this.handleMultiSelectChange = this.handleMultiSelectChange.bind(this);
     this.handleWidgetChange = this.handleWidgetChange.bind(this);
     this.handleNewEventSubmit = this.handleNewEventSubmit.bind(this);
     this.handleDelete = this.handleDelete.bind(this);
@@ -51,28 +50,28 @@ class Calendar extends Component {
   }
 
   componentDidMount() {
-    if (getUserTypeFromToken() === 'TEACHER') {
-      this.getStudentList();
+    try {
+      if (getUserTypeFromToken() === 'TEACHER') {
+        this.getStudentList();
+        this.setState({
+          teacher_user: getUserIdFromToken(),
+        });
+      }
+    } catch (error) {
+      throw error;
     }
-    this.setState({
-      teacher_user: getUserIdFromToken(),
-    });
   }
 
   async getStudentList() {
     const students = [];
-    try {
-      const response = await axiosInstance.get('/yoyaku/users/student_list/');
-      for (let student of response.data) {
-        students.push(`${student.last_name}, ${student.first_name} (${student.id})`);
-      }
-      students.sort();
-      this.setState({
-        studentList: students,
-      });
-    } catch (err) {
-      alert(err);
+    const response = await axiosInstance.get('/yoyaku/users/student_list/');
+    for (let student of response.data) {
+      students.push(`${student.last_name}, ${student.first_name} (${student.id})`);
     }
+    students.sort();
+    this.setState({
+      studentList: students,
+    });
   }
 
   handleDateClick(info) {
@@ -99,19 +98,6 @@ class Calendar extends Component {
   handleChange(event) {
     this.setState({
       [event.target.name]: event.target.value,
-    });
-  }
-
-  handleMultiSelectChange(event) {
-    const options = event.target.options;
-    const selectedValues = [];
-    for (let i = 0; i < options.length; i++) {
-      if (options[i].selected) {
-        selectedValues.push(options[i].value);
-      }
-    }
-    this.setState({
-      [event.target.name]: selectedValues,
     });
   }
 
@@ -197,7 +183,6 @@ class Calendar extends Component {
                 state={this.state} 
                 toggle={this.toggleForm} 
                 onChange={this.handleChange} 
-                onMultiSelectChange={this.handleMultiSelectChange} 
                 onWidgetChange={this.handleWidgetChange}
                 onSubmit={this.handleNewEventSubmit}/>
               <EditEventForm 
@@ -229,12 +214,11 @@ function NewEventForm(props) {
             <Multiselect
               name='student_user'
               data={props.state.studentList}
-              onChange={value => props.onWidgetChange('student_user', value.map(student => student.split(' ')[2].slice(1, -1)))}
+              onChange={value => props.onWidgetChange('student_user', value.map(student => student.split(' ')[-1].slice(1, -1)))}
             />
             <FormGroup> {/* TODO validations that start < end */}
               Start
               <DateTimePicker
-                name='start'
                 onChange={value => props.onWidgetChange('start', value.toISOString())}
                 date={false}
                 currentDate={new Date(props.state.selectedDate)}

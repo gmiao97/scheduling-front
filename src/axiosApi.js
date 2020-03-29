@@ -15,7 +15,7 @@ const axiosInstance = axios.create({
 axiosInstance.interceptors.request.use(
   config => {
     // remove Authorization header on request to create new user
-    if ((config.url === '/yoyaku/users/' && config.method === 'post') || config.url === '/yoyaku/validate-token/') {
+    if (config.url === '/yoyaku/users/' && config.method === 'post') {
       delete config.headers['Authorization'];
     }
     return config;

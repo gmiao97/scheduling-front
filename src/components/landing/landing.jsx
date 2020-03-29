@@ -42,7 +42,7 @@ function Landing(props) {
                 <Modal isOpen={modal1} toggle={modalToggle1}>
                   <ModalHeader toggle={modalToggle1}>Signup</ModalHeader>
                   <ModalBody>
-                    <Signup/>
+                    <Signup toggle={modalToggle1} />
                   </ModalBody>
                 </Modal>
               </div>

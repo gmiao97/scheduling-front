@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { createBrowserHistory } from 'history';
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { faLanguage, faUser } from '@fortawesome/free-solid-svg-icons'
 
@@ -25,9 +24,8 @@ class App extends Component {
   }
 
   async isAuthenticated() {
-    const access_token = localStorage.getItem('access_token');
     try {
-      await axiosInstance.get('/yoyaku/validate-token/', { access: access_token });
+      await axiosInstance.get('/yoyaku/validate-token/');
       this.setState({
         isAuthenticated: true,
       });
@@ -83,4 +81,3 @@ class App extends Component {
 }
 
 export default App;
-// export const history = createBrowserHistory({forceRefresh: true});

@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Switch, Route, Redirect, Link } from 'react-router-dom';
+import React, { Component } from 'react';
+import { Switch, Route, Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
   Collapse,
@@ -15,66 +15,70 @@ import {
 import Profile from './profile';
 import Calendar from './calendar';
 
-// TODO redirect to login if no token
-export function getUserIdFromToken() {
-  const token = localStorage.getItem('refresh_token');
-  const encodedPayLoad = token.split('.')[1];
-  const payloadObject = JSON.parse(atob(encodedPayLoad));
-  const userId = payloadObject.user_id;
-  return userId;
-}
 
-export function getUserTypeFromToken() {
-  const token = localStorage.getItem('refresh_token');
-  const encodedPayLoad = token.split('.')[1];
-  const payloadObject = JSON.parse(atob(encodedPayLoad));
-  const userType = payloadObject.user_type;
-  return userType;
-}
+class Home extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      isOpen: false,
+    };
 
-function Home(props) {
-  const [isOpen, setIsOpen] = useState(false);
-  const toggle = () => setIsOpen(!isOpen);
+    this.handleLogout = props.handleLogout;
+    this.toggle = this.toggle.bind(this);
+  }
 
-  return(
-    <div>
+  componentDidCatch(error, info) {
+    console.log(info.componentStack);
+    console.log(error);
+  }
+
+  toggle() {
+    this.setState({
+      isOpen: !this.state.isOpen,
+    });
+  }
+
+  render() {
+    return(
       <div>
-        <Navbar color='dark' dark expand='sm'>
-          <NavbarBrand className='text-info' href='/'>
-            <span className='m-1'><FontAwesomeIcon icon='language' size='lg'/></span>
-            Yoyaku
-          </NavbarBrand>
-          <NavbarToggler onClick={toggle}/>
-          <Collapse isOpen={isOpen} navbar>
-            <Nav className='mr-auto' navbar>
-              <NavItem>
-                <NavLink className='text-info' tag={Link} to='/profile/'>Profile</NavLink>
-              </NavItem>
-              <NavItem>
-                <NavLink className='text-info' tag={Link} to='/calendar/'>Calendar</NavLink>
-              </NavItem>
-            </Nav>
-            <Nav className='ml-auto' navbar>
-              <NavItem>
-                <Button outline color='danger' onClick={props.handleLogout}>Logout</Button>
-              </NavItem>
-            </Nav>
-          </Collapse>
-        </Navbar>  
-        <Switch>
-          <Route exact path={'/profile/'}>
-            <Profile/>
-          </Route>
-          <Route exact path={'/calendar/'}>
-            <Calendar/>
-          </Route>
-          <Route exact path={'/'}>
-            <Profile/>
-          </Route>
-        </Switch>
+        <div>
+          <Navbar color='dark' dark expand='sm'>
+            <NavbarBrand className='text-info' href='/'>
+              <span className='m-1'><FontAwesomeIcon icon='language' size='lg'/></span>
+              Yoyaku
+            </NavbarBrand>
+            <NavbarToggler onClick={this.toggle}/>
+            <Collapse isOpen={this.state.isOpen} navbar>
+              <Nav className='mr-auto' navbar>
+                <NavItem>
+                  <NavLink className='text-info' tag={Link} to='/profile/'>Profile</NavLink>
+                </NavItem>
+                <NavItem>
+                  <NavLink className='text-info' tag={Link} to='/calendar/'>Calendar</NavLink>
+                </NavItem>
+              </Nav>
+              <Nav className='ml-auto' navbar>
+                <NavItem>
+                  <Button outline color='danger' onClick={this.handleLogout}>Logout</Button>
+                </NavItem>
+              </Nav>
+            </Collapse>
+          </Navbar>  
+          <Switch>
+            <Route exact path={'/profile/'}>
+              <Profile/>
+            </Route>
+            <Route exact path={'/calendar/'}>
+              <Calendar/>
+            </Route>
+            <Route exact path={'/'}>
+              <Profile/>
+            </Route>
+          </Switch>
+        </div>
       </div>
-    </div>
-  );
+    );
+  }
 }
 
 export default Home;

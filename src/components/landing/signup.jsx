@@ -24,6 +24,9 @@ class Signup extends Component {
       last_name: '',
       user_type: 'STUDENT',
       time_zone: 'Africa/Abidjan',
+      phone_number: '',
+      birthday: '',
+      description: '',
       student_profile: {
         school_name: '',
         school_grade: '-1',
@@ -33,6 +36,7 @@ class Signup extends Component {
       },
     };
 
+    this.toggle = props.toggle;
     this.handleChange = this.handleChange.bind(this);
     this.handleChangeStudentProfile = this.handleChangeStudentProfile.bind(this);
     this.handleChangeTeacherProfile = this.handleChangeTeacherProfile.bind(this);
@@ -79,10 +83,11 @@ class Signup extends Component {
 
     try {
       const response = await axiosInstance.post('/yoyaku/users/', this.state);
-      // history.push('/login/');
       return response;
     } catch(error) {
       console.log(error.stack);
+    } finally {
+      this.toggle();
     }
   }
 
@@ -113,7 +118,6 @@ class Signup extends Component {
   }
 }
 
-
 function GeneralSignup(props) {
   return(
     <div>
@@ -138,6 +142,20 @@ function GeneralSignup(props) {
         <Col md='6'>
           <AvField type='text' label='Last Name' name='last_name' value={props.profile.last_name} onChange={props.handleChange} validate={{
             required: {value: true, errorMessage: 'Please enter last name'},
+          }}/>
+        </Col>
+      </Row>
+      <Row form>
+        <Col md='6'>
+          <AvField type='text' label='Phone Number' name='phone_number' value={props.profile.phone_number} onChange={props.handleChange} validate={{
+            required: {value: true, errorMessage: 'Please enter phone number using only numbers'},
+            pattern: {value: '^[0-9]+$'},
+          }}/>
+        </Col>
+        <Col md='6'>
+          <AvField type='date' label='Date of Birth' name='birthday' value={props.profile.birthday} onChange={props.handleChange} validate={{
+            required: {value: true, errorMessage: 'Please enter birth date'},
+            date: {format: 'MM/DD/YYYY'},
           }}/>
         </Col>
       </Row>
