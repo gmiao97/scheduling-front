@@ -32,7 +32,7 @@ class Calendar extends Component {
       end: '',
       student_user: [],
       teacher_user: '',
-      selectedDate: '',
+
       selectedEvent: '',
       studentList: [],
       displayNewEventForm: false,
@@ -85,10 +85,8 @@ class Calendar extends Component {
       this.setState({
         title: '',
         start: info.dateStr,
-        end: '',
+        end: info.dateStr,
         student_user: [],
-        // selectedDate: moment.tz(info.dateStr, moment.tz.guess()).format(),
-        selectedDate: info.dateStr,
         selectedEvent: '',
       });
       this.toggleForm('new');
@@ -101,10 +99,9 @@ class Calendar extends Component {
     // alert(info.event.extendedProps.student_user[0].first_name);
     this.setState({
       title: info.event.title,
-      start: info.event.start,
-      end: info.event.end,
+      start: info.event.start.toISOString(),
+      end: info.event.end.toISOString(),
       student_user: info.event.extendedProps.student_user.map(user => String(user.id)),
-      selectedDate: '',
       selectedEvent: info.event.id,
     });
     this.toggleForm('edit');
@@ -124,10 +121,16 @@ class Calendar extends Component {
     });
   }
 
-  handleWidgetChange(name, value) {
-    this.setState({
+  async handleWidgetChange(name, value) {
+    await Promise.resolve(this.setState({
       [name]: value,
-    });
+    }));
+    // alert(`${this.state.end} ${this.state.start} ${new Date(this.state.end) < new Date(this.state.start)}`);
+    if (new Date(this.state.end) < new Date(this.state.start)) {
+      this.setState({
+        end: this.state.start,
+      });
+    }
   }
 
   async handleNewEventSubmit(event) {
@@ -247,7 +250,7 @@ class Calendar extends Component {
 function NewEventForm(props) {
   return(
     <Modal isOpen={props.state.displayNewEventForm} toggle={() => {props.toggle('new');}}>
-      <ModalHeader toggle={() => props.toggle('new')}>Create New Event on {props.state.selectedDate.slice(0, 10)}</ModalHeader>
+      <ModalHeader toggle={() => props.toggle('new')}>Create New Event on {props.state.start.slice(0, 10)}</ModalHeader>
       <ModalBody>
         <Container>
           <AvForm onValidSubmit={props.onSubmit}>
@@ -263,19 +266,20 @@ function NewEventForm(props) {
             <FormGroup> {/* TODO validations that start < end */}
               Start
               <DateTimePicker
+                value={new Date(props.state.start)}
                 onChange={value => props.onWidgetChange('start', value.toISOString())}
                 date={false}
-                currentDate={new Date(props.state.selectedDate)}
-                defaultValue={new Date(props.state.selectedDate)}
                 step={15}
+                inputProps={{readOnly: true}}
               />
               End
-              <DateTimePicker 
+              <DateTimePicker
+                value={new Date(props.state.end)}
                 onChange={value => props.onWidgetChange('end', value.toISOString())}
                 date={false}
-                currentDate={new Date(props.state.selectedDate)}
                 step={15}
-                // min={new Date(props.state.selectedDate)}
+                min={new Date(props.state.start)}  
+                inputProps={{readOnly: true}}
               />
             </FormGroup>
             <Button outline color='info'>Submit</Button>
@@ -306,19 +310,20 @@ function EditEventForm(props) {
             <FormGroup> {/* TODO validations that start < end */}
               Start
               <DateTimePicker
+                value={new Date(props.state.start)}
                 onChange={value => props.onWidgetChange('start', value.toISOString())}
                 date={false}
-                currentDate={new Date(props.state.start)}
-                defaultValue={new Date(props.state.start)}
                 step={15}
+                inputProps={{readOnly: true}}
               />
               End
-              <DateTimePicker 
+              <DateTimePicker
+                value={new Date(props.state.end)}
                 onChange={value => props.onWidgetChange('end', value.toISOString())}
                 date={false}
-                currentDate={new Date(props.state.start)}
-                defaultValue={new Date(props.state.end)}
                 step={15}
+                min={new Date(props.state.start)}
+                inputProps={{readOnly: true}}
               />
             </FormGroup>
             <Button outline color='info'>Submit</Button>
