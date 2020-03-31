@@ -15,8 +15,9 @@ import {
   Button, 
   Form, 
   FormGroup, 
-  Label, 
-  Input, 
+  Label,
+  Input,
+  ModalFooter, 
 } from 'reactstrap';
 
 import { getUserIdFromToken, getUserTypeFromToken } from '../util';
@@ -46,6 +47,7 @@ class Calendar extends Component {
     this.handleChange = this.handleChange.bind(this);
     this.handleWidgetChange = this.handleWidgetChange.bind(this);
     this.handleNewEventSubmit = this.handleNewEventSubmit.bind(this);
+    this.handleEditEventSubmit = this.handleEditEventSubmit.bind(this);
     this.handleDelete = this.handleDelete.bind(this);
     this.toggleForm = this.toggleForm.bind(this);
   }
@@ -66,8 +68,8 @@ class Calendar extends Component {
   async getStudentList() {
     const students = [];
     const response = await axiosInstance.get('/yoyaku/users/student_list/');
-    for (let student of response.data) {
-      students.push(`${student.last_name}, ${student.first_name} (${student.id})`);
+    for (let user of response.data) {
+      students.push(`${user.last_name}, ${user.first_name} (${user.id})`);
     }
     students.sort();
     this.setState({
@@ -81,9 +83,13 @@ class Calendar extends Component {
       calendarApi.changeView('timeGridDay', info.dateStr);
     } else {
       this.setState({
+        title: '',
+        start: info.dateStr,
+        end: '',
+        student_user: [],
         // selectedDate: moment.tz(info.dateStr, moment.tz.guess()).format(),
         selectedDate: info.dateStr,
-
+        selectedEvent: '',
       });
       this.toggleForm('new');
     }
@@ -94,6 +100,11 @@ class Calendar extends Component {
     // alert(info.event.id);
     // alert(info.event.extendedProps.student_user[0].first_name);
     this.setState({
+      title: info.event.title,
+      start: info.event.start,
+      end: info.event.end,
+      student_user: info.event.extendedProps.student_user.map(user => String(user.id)),
+      selectedDate: '',
       selectedEvent: info.event.id,
     });
     this.toggleForm('edit');
@@ -121,24 +132,39 @@ class Calendar extends Component {
 
   async handleNewEventSubmit(event) {
     event.preventDefault();
-    this.toggleForm('new');
     try {
       const response = await axiosInstance.post('/yoyaku/events/', this.state);
       this.forceUpdate();
       return response;
     } catch(error) {
       console.log(error.stack);
+    } finally {
+      this.toggleForm('new');
+    }
+  }
+
+  async handleEditEventSubmit(event) {
+    event.preventDefault();
+    try {
+      const response = await axiosInstance.put(`/yoyaku/events/${this.state.selectedEvent}/`, this.state);
+      this.forceUpdate();
+      return response;
+    } catch (error) {
+      console.log(error.stack);
+    } finally {
+      this.toggleForm('edit');
     }
   }
 
   async handleDelete() {
-    this.toggleForm('edit');
     try {
       const response = await axiosInstance.delete(`/yoyaku/events/${this.state.selectedEvent}/`);
       this.forceUpdate();
       return response;
     } catch(error) {
       console.log(error.stack);
+    } finally {
+      this.toggleForm('edit');
     }
   }
 
@@ -204,6 +230,9 @@ class Calendar extends Component {
                 state={this.state} 
                 toggle={this.toggleForm} 
                 onDelete={this.handleDelete}
+                onChange={this.handleChange} 
+                onWidgetChange={this.handleWidgetChange}
+                onSubmit={this.handleEditEventSubmit}
               />
             </div> 
           :
@@ -234,18 +263,19 @@ function NewEventForm(props) {
             <FormGroup> {/* TODO validations that start < end */}
               Start
               <DateTimePicker
-                onChange={value => props.onWidgetChange('start', value)}
+                onChange={value => props.onWidgetChange('start', value.toISOString())}
                 date={false}
                 currentDate={new Date(props.state.selectedDate)}
-                // defaultValue={new Date(props.state.selectedDate)}
+                defaultValue={new Date(props.state.selectedDate)}
                 step={15}
               />
               End
               <DateTimePicker 
-                onChange={value => props.onWidgetChange('end', value)}
+                onChange={value => props.onWidgetChange('end', value.toISOString())}
                 date={false}
                 currentDate={new Date(props.state.selectedDate)}
                 step={15}
+                // min={new Date(props.state.selectedDate)}
               />
             </FormGroup>
             <Button outline color='info'>Submit</Button>
@@ -262,10 +292,42 @@ function EditEventForm(props) {
       <ModalHeader toggle={() => props.toggle('edit')}>Edit Event</ModalHeader>
       <ModalBody>
         <Container>
-    
-          <Button outline color='danger' onClick={props.onDelete}>Delete</Button>
+          <AvForm onValidSubmit={props.onSubmit}>
+            <AvField type='text' label='Event Name' name='title' value={props.state.title} onChange={props.onChange} validate={{
+              required: {value: true, errorMessage: 'Please enter event name'},
+            }}/>
+            Select Students
+            <Multiselect
+              name='student_user'
+              data={props.state.studentList}
+              onChange={value => props.onWidgetChange('student_user', value.map(student => student.split(' ')[2].slice(1, -1)))}
+              defaultValue={props.state.studentList.filter(user => props.state.student_user.includes(user.split(' ')[2].slice(1, -1)))}
+            />
+            <FormGroup> {/* TODO validations that start < end */}
+              Start
+              <DateTimePicker
+                onChange={value => props.onWidgetChange('start', value.toISOString())}
+                date={false}
+                currentDate={new Date(props.state.start)}
+                defaultValue={new Date(props.state.start)}
+                step={15}
+              />
+              End
+              <DateTimePicker 
+                onChange={value => props.onWidgetChange('end', value.toISOString())}
+                date={false}
+                currentDate={new Date(props.state.start)}
+                defaultValue={new Date(props.state.end)}
+                step={15}
+              />
+            </FormGroup>
+            <Button outline color='info'>Submit</Button>
+          </AvForm>
         </Container>
       </ModalBody>
+      <ModalFooter>
+        <Button outline color='danger' onClick={props.onDelete}>Delete</Button>
+      </ModalFooter>
     </Modal>
   );
 }

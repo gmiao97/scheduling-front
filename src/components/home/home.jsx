@@ -10,6 +10,10 @@ import {
   NavItem,
   NavLink,
   Button,
+  UncontrolledDropdown,
+  DropdownToggle,
+  DropdownMenu,
+  DropdownItem,
 } from 'reactstrap';
 
 import Profile from './profile';
@@ -43,24 +47,38 @@ class Home extends Component {
       <div>
         <div>
           <Navbar color='dark' dark expand='sm'>
-            <NavbarBrand className='text-info' href='/'>
-              <span className='m-1'><FontAwesomeIcon icon='language' size='lg'/></span>
-              Yoyaku
+            <NavbarBrand className='text-warning' href='/'>
+              <span className='m-2'><FontAwesomeIcon icon='school' size='md'/></span>
+              Success Academy
             </NavbarBrand>
             <NavbarToggler onClick={this.toggle}/>
             <Collapse isOpen={this.state.isOpen} navbar>
               <Nav className='mr-auto' navbar>
                 <NavItem>
-                  <NavLink className='text-info' tag={Link} to='/profile/'>Profile</NavLink>
+                  <NavLink className='text-warning' tag={Link} to='/profile/'>Profile</NavLink>
                 </NavItem>
                 <NavItem>
-                  <NavLink className='text-info' tag={Link} to='/calendar/'>Calendar</NavLink>
+                  <NavLink className='text-warning' tag={Link} to='/calendar/'>Calendar</NavLink>
                 </NavItem>
               </Nav>
               <Nav className='ml-auto' navbar>
-                <NavItem>
-                  <Button outline color='danger' onClick={this.handleLogout}>Logout</Button>
-                </NavItem>
+                <UncontrolledDropdown nav inNavbar>
+                  <DropdownToggle className='text-warning' nav caret>
+                    <span className='m-1'><FontAwesomeIcon icon='user' size='lg' color='green'/></span>
+                  </DropdownToggle>
+                  <DropdownMenu right>
+                    <DropdownItem>
+                      <NavLink className='text-muted' tag={Link} to='/profile/'>Profile</NavLink>
+                    </DropdownItem>
+                    <DropdownItem>
+                      Edit Profile
+                    </DropdownItem>
+                    <DropdownItem divider />
+                    <DropdownItem>
+                      <Button outline color='danger' onClick={this.handleLogout}>Logout</Button>
+                    </DropdownItem>
+                  </DropdownMenu>
+                </UncontrolledDropdown>
               </Nav>
             </Collapse>
           </Navbar>  

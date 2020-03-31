@@ -104,7 +104,7 @@ class Profile extends Component {
               <TabPane className='m-3' tabId="1">
                 <Row>
                   <Col sm="1">
-                    <span className='m-1'><FontAwesomeIcon icon='user' size='3x' color='orange'/></span>
+                    <span className='m-1'><FontAwesomeIcon icon='user' size='3x' color='green'/></span>
                   </Col>
                   <Col sm="11">
                     <h4>Basic Info</h4>

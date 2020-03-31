@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
 import { library } from '@fortawesome/fontawesome-svg-core'
-import { faLanguage, faUser } from '@fortawesome/free-solid-svg-icons'
+import { faLanguage, faUser, faSchool } from '@fortawesome/free-solid-svg-icons'
 
 import Landing from './landing/landing';
 import Home from './home/home';
 import axiosInstance from '../axiosApi';
 
-library.add(faLanguage, faUser);
+library.add(faLanguage, faUser, faSchool);
 
 class App extends Component {
   constructor(props) {
@@ -73,7 +73,7 @@ class App extends Component {
       <Landing handleLogin={this.handleLogin}/>
     }
     return (
-      <div>
+      <div id='app'>
         {renderComponent}
       </div>   
     );
