@@ -5,7 +5,6 @@ import timeGridPlugin from '@fullcalendar/timegrid';
 import interactionPlugin from "@fullcalendar/interaction";
 import bootstrapPlugin from '@fullcalendar/bootstrap';
 import { DateTimePicker, Multiselect } from 'react-widgets';
-import moment from 'moment-timezone';
 import { AvForm, AvField } from 'availity-reactstrap-validation';
 import {
   Container,
@@ -20,7 +19,7 @@ import {
   ModalFooter, 
 } from 'reactstrap';
 
-import { getUserIdFromToken, getUserTypeFromToken } from '../util';
+import { getUserIdFromToken, getUserTypeFromToken } from '../../util';
 import axiosInstance from '../../axiosApi';
 
 class Calendar extends Component {

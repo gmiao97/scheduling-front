@@ -18,7 +18,8 @@ import {
 } from 'reactstrap';
 
 import axiosInstance from '../../axiosApi';
-import { getUserIdFromToken } from '../util';
+import { getUserIdFromToken } from '../../util';
+import { gradeMappings } from '../../util';
 
 class Profile extends Component {
   constructor(props) {
@@ -42,6 +43,7 @@ class Profile extends Component {
       isProfileLoaded: false,
       activeTab: '1',
     };
+
     this.getProfile = this.getProfile.bind(this);
     this.toggleTab = this.toggleTab.bind(this);
   }
@@ -138,8 +140,8 @@ class Profile extends Component {
                         <h4>Student Information</h4>
                         <h6>
                           School
-                          <small className='text-muted m-2'>{this.state.student_profile.school_name + ", Grade " + 
-                          this.state.student_profile.school_grade}</small>
+                          <small className='text-muted m-2'>{this.state.student_profile.school_name + ', ' +
+                          gradeMappings.get(this.state.student_profile.school_grade)}</small>
                         </h6>
                       </div>
                     }

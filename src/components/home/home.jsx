@@ -17,6 +17,7 @@ import {
 } from 'reactstrap';
 
 import Profile from './profile';
+import EditProfile from './editProfile';
 import Calendar from './calendar';
 
 
@@ -71,7 +72,7 @@ class Home extends Component {
                       <NavLink className='text-muted' tag={Link} to='/profile/'>Profile</NavLink>
                     </DropdownItem>
                     <DropdownItem>
-                      Edit Profile
+                    <NavLink className='text-muted' tag={Link} to='/edit-profile/'>Edit Profile</NavLink>
                     </DropdownItem>
                     <DropdownItem divider />
                     <DropdownItem>
@@ -85,6 +86,9 @@ class Home extends Component {
           <Switch>
             <Route exact path={'/profile/'}>
               <Profile/>
+            </Route>
+            <Route exact path={'/edit-profile/'}>
+              <EditProfile/>
             </Route>
             <Route exact path={'/calendar/'}>
               <Calendar/>

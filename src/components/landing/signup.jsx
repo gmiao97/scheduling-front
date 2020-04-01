@@ -12,6 +12,7 @@ import {
 } from 'reactstrap';
 
 import axiosInstance from '../../axiosApi';
+import { gradeMappings } from '../../util';
 
 
 class Signup extends Component {
@@ -68,7 +69,6 @@ class Signup extends Component {
   }
 
   // TODO error handling and validation
-  // TODO field validation
   async handleSubmit(event) {
     event.preventDefault();
     switch(this.state.user_type) {
@@ -118,7 +118,7 @@ class Signup extends Component {
   }
 }
 
-function GeneralSignup(props) {
+export function GeneralSignup(props) {
   return(
     <div>
       <AvField type='email' label='Email' name='email' value={props.profile.email} onChange={props.handleChange} validate={{
@@ -149,7 +149,7 @@ function GeneralSignup(props) {
         <Col md='6'>
           <AvField type='text' label='Phone Number' name='phone_number' value={props.profile.phone_number} onChange={props.handleChange} validate={{
             required: {value: true, errorMessage: 'Please enter phone number using only numbers'},
-            pattern: {value: '^[0-9]+$'},
+            pattern: {value: '^[0-9]+$', errorMessage: 'Please enter only numbers'},
           }}/>
         </Col>
         <Col md='6'>
@@ -178,7 +178,7 @@ function GeneralSignup(props) {
         <Label>
           Select Time Zone
           <Input type='select' name='time_zone' value={props.profile.time_zone} onChange={props.handleChange}> 
-            {moment.tz.names().map((value, index) =>  // TODO there are timezones that aren't support by pytz
+            {moment.tz.names().filter(tz => tz !== 'Asia/Qostanay').map((value, index) =>  // TODO Asia/Qostanay isn't in pytz timezones
               <option key={index} value={value}>{value}</option>
             )}
           </Input>
@@ -189,9 +189,12 @@ function GeneralSignup(props) {
 }
 
 
-function StudentProfileSignup(props) {
-  const schoolGrades = ['Preschool', 'Kindergarten', 'First Grade', 'Second Grade', 'Third Grade', 'Fourth Grade', 
-  'Fifth Grade', 'Sixth Grade', 'Seventh Grade', 'Eighth Grade', 'Ninth Grade', 'Tenth Grade', 'Eleventh Grade', 'Twelvth Grade',]
+export function StudentProfileSignup(props) {
+  const schoolGrades = [];
+  for (let grade of gradeMappings) {
+    schoolGrades.push(grade);
+  }
+
   return(
     <div>
       <AvField type='text' label='School Name' name='school_name' value={props.student_profile.school_name} onChange={props.onChange} validate={{
@@ -202,7 +205,7 @@ function StudentProfileSignup(props) {
           School Grade
           <Input type='select' name='school_grade' value={props.student_profile.school_grade} onChange={props.onChange}>
             {schoolGrades.map((value, index) => 
-              <option key={index} value={index-1}>{value}</option>
+              <option key={index} value={value[0]}>{value[1]}</option>
             )}
           </Input>
         </Label>
@@ -212,7 +215,7 @@ function StudentProfileSignup(props) {
 }
 
 
-function TeacherProfileSignup(props) {
+export function TeacherProfileSignup(props) {
   return(
     <div>
       <AvField type='text' label='Association' name='association' value={props.teacher_profile.association} onChange={props.onChange} validate={{
