@@ -1,3 +1,5 @@
+# This is the frontend for the scheduling site. This code has been moved inside gmiao97/yoyakusite repository. This project is deprecated and has been archived. Please see mentioned repository (gmiao97/yoyakusite/frontend) for maintained frontend code
+
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts
